@@ -1,10 +1,10 @@
 # "A first step towards controllability of partial differential equations via physics-informed neural networks"
 
-For reproducibility purposes, this repository contains the code used in the examples described in the "Numerical experiments" section of the manuscript "A first step towards controllability of partial differential equations vin physics-informed neural networks", (2022), by Carlos J. García-Cervera[^1], Mathieu Kessler[^2] and Francisco Periago[^2].
+For reproducibility purposes, this repository contains the code used in the examples described in the "Numerical experiments" section of the manuscript "A first step towards controllability of partial differential equations via physics-informed neural networks", (2022), by Carlos J. García-Cervera[^1], Mathieu Kessler[^2] and Francisco Periago[^2].
 
 ## Requirements and instructions 
 
-1. Clone the present project in the location you choose:
+1. Clone the present project in the folder of your choice:
 ```
 git clone git@github.com:mkesslerct/deepcontrol.git
 ```
