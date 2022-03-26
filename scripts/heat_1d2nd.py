@@ -6,87 +6,100 @@
 # y(x,1)=x^2 + 1
 
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import matplotlib.pyplot as plt
 import numpy as np
 
 import deepxde as dde
-from deepxde.backend import tf
 
 
+import pathlib
+import os
 
-def main():
-    def pde(x, y): # heat equation
-        dy_t = dde.grad.jacobian(y, x, i=0, j=1)
-        dy_xx = dde.grad.hessian(y, x, i=0, j=0)
-        return dy_t -  dy_xx
-    
-    def initial_temp(x): # initial temperature
-        return x[:, 0:1]**2    
+OUTPUT_DIRECTORY = pathlib.Path.cwd() / "results" / "heat_1d2nd"
+if not OUTPUT_DIRECTORY.exists():
+    os.makedirs(OUTPUT_DIRECTORY, exist_ok=True)
 
-    def final_temp(x):
-        return x[:, 0:1]**2 + 2 
-    
-    def exact_solution(x): # exact solution
-        return x[:, 0:1]**2 + 2 * x[:,1:2]
-       
-    def boundary_bottom(x, on_boundary): # boundary t =0
-        return on_boundary and np.isclose(x[1],0)
-    
-    def boundary_upper(x, on_boundary): # boundary t = 1
-        return on_boundary and np.isclose(x[1], 1)
+def pde(x, y): # heat equation
+    dy_t = dde.grad.jacobian(y, x, i=0, j=1)
+    dy_xx = dde.grad.hessian(y, x, i=0, j=0)
 
-    geom = dde.geometry.Rectangle(xmin=[0, 0], xmax=[1, 1])
-    
-    b_time0 = dde.DirichletBC(geom, initial_temp, boundary_bottom)
-    b_timeT = dde.DirichletBC(geom, final_temp, boundary_upper) 
-    
-    data = dde.data.PDE(
-        geom, 
-        pde, 
-        [b_time0, b_timeT], 
-        num_domain=1000, 
-        num_boundary=300,
-        solution=exact_solution,
-        num_test=100
-        )
+    return dy_t -  dy_xx
 
-    net = dde.maps.FNN([2] + [40] * 4 + [1], "tanh", "Glorot uniform")
-    model = dde.Model(data, net)
+def initial_temp(x): # initial temperature
 
-    model.compile("adam", lr=0.001)
-    model.train(epochs=20000)
-    model.compile("L-BFGS-B")
-    losshistory, train_state = model.train()
-    dde.saveplot(losshistory, train_state, issave=True, isplot=True)
+    return x[:, 0:1]**2    
 
-    #Post-processing: error analysis and figures 
-     
-    X = geom.random_points(1000)
-    y_true = exact_solution(X)
-    y_pred = model.predict(X)
-    print("L2 relative error:", dde.metrics.l2_relative_error(y_true, y_pred))   
+def final_temp(x):
 
-    XX, T = np.meshgrid(
-        np.linspace(0, 1, 100),
-        np.linspace(0, 1, 100)
+    return x[:, 0:1]**2 + 2 
+
+def exact_solution(x): # exact solution
+
+    return x[:, 0:1]**2 + 2 * x[:,1:2]
+   
+def boundary_bottom(x, on_boundary): # boundary t =0
+
+    return (on_boundary and np.isclose(x[1],0))
+
+def boundary_upper(x, on_boundary): # boundary t = 1
+    return (on_boundary and np.isclose(x[1], 1))
+
+geom = dde.geometry.Rectangle(xmin=[0, 0], xmax=[1, 1])
+
+b_time0 = dde.DirichletBC(geom, initial_temp, boundary_bottom)
+b_timeT = dde.DirichletBC(geom, final_temp, boundary_upper) 
+
+data = dde.data.PDE(
+    geom, 
+    pde, 
+    [b_time0, b_timeT], 
+    num_domain=1000, 
+    num_boundary=300,
+    solution=exact_solution,
+    num_test=100
     )
-    
-    def explicit_solution(x,t): # exact solution
-        return x**2 + 2 * t
 
-    Y = explicit_solution(XX, T)            
+net = dde.maps.FNN([2] + [40] * 4 + [1], "tanh", "Glorot uniform")
+
+model = dde.Model(data, net)
+
+model.compile("adam", lr=0.001)
+
+model.train(epochs=20000)
+
+model.compile("L-BFGS-B")
+
+losshistory, train_state = model.train()
+
+dde.saveplot(
+    losshistory, train_state, issave=True, isplot=True, output_dir=OUTPUT_DIRECTORY
+)
+
+#Post-processing: error analysis and figures 
+ 
+X = geom.random_points(1000)
+y_true = exact_solution(X)
+y_pred = model.predict(X)
+
+print("L2 relative error:", dde.metrics.l2_relative_error(y_true, y_pred))   
+
+XX, T = np.meshgrid(
+    np.linspace(0, 1, 100),
+    np.linspace(0, 1, 100)
+)
+
+def explicit_solution(x,t): # exact solution
+    return x**2 + 2 * t
+
+Y = explicit_solution(XX, T)            
+
+fig = plt.figure() # plot of exact state
+ax = plt.axes(projection="3d")
+surf = ax.plot_surface(XX, T, Y)
+
+ax.set_title('exact state ')
+ax.set_xlabel('$x$')
+ax.set_ylabel('$t$')
+
+plt.show()
     
-    fig = plt.figure() # plot of exact state
-    ax = plt.axes(projection="3d")
-    surf = ax.plot_surface(XX, T, Y)
-    ax.set_title('exact state ')
-    ax.set_xlabel('$x$')
-    ax.set_ylabel('$t$')
-    plt.show()
-    
-if __name__ == "__main__":
-    main()
