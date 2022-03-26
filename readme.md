@@ -4,9 +4,9 @@ For reproducibility purposes, this repository contains the code used in the exam
 
 ## Requirements and instructions 
 
-1. Clone the present project in the location you choose:
+1. [ ] Clone the present project in the location you choose:
 ```
-git clone 
+git clone git@github.com:mkesslerct/deepcontrol.git
 ```
 2. Create the conda virtual enviromment `deepcontrol` 
 ```
@@ -33,6 +33,5 @@ python3 scripts/script_name.py
 
 
 
-[^1] Department of Mathematics. University of California, Santa Barbara. CA 93106, USA
-[^2] Department of Applied Mathematics and Statistics. Universidad Politécnica de Cartagena, 
-Campus Muralla del Mar, 30202, Cartagena (Murcia), Spain
+[^1]: Department of Mathematics. University of California, Santa Barbara. CA 93106, USA
+[^2]: Department of Applied Mathematics and Statistics. Universidad Politécnica de Cartagena, Campus Muralla del Mar, 30202, Cartagena (Murcia), Spain
