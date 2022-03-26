@@ -1,0 +1,11 @@
+name: deepcontrol
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - numpy
+  - scikit-learn
+  - scikit-optimize
+  - scipy
+  - matplotlib
+  - tensorflow=2.7.*
