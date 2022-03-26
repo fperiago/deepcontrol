@@ -4,7 +4,7 @@ For reproducibility purposes, this repository contains the code used in the exam
 
 ## Requirements and instructions 
 
-1. Clone the present project in the location you choose:
+1. Clone the present project in the folder of your choice:
 ```
 git clone git@github.com:mkesslerct/deepcontrol.git
 ```
