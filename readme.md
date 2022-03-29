@@ -6,7 +6,7 @@ For reproducibility purposes, this repository contains the code used in the exam
 
 1. Clone the present project in the folder of your choice:
 ```
-git clone git@github.com:mkesslerct/deepcontrol.git
+git clone git@github.com:fperiago/deepcontrol.git
 ```
 2. Create the conda virtual enviromment `deepcontrol` 
 ```
