@@ -6,7 +6,7 @@ For reproducibility purposes, this repository contains the code used in the exam
 
 1. Clone the present project in the folder of your choice:
 ```
-git clone git@github.com:fperiago/deepcontrol.git
+git clone https://github.com/fperiago/deepcontrol.git
 ```
 2. Create the conda virtual enviromment `deepcontrol` 
 ```
@@ -20,7 +20,7 @@ conda activate deepcontrol
 4. Download and install the development version of `deepxde`, the library for scientific machine learning and physics-informed learning, see [Github repo](https://github.com/lululxvi/deepxde)
 > Note: as of March 25th 2022, the development version if required for the multidimensional linear heat equation, section 4.2
 ```
-git clone git@github.com:lululxvi/deepxde.git
+git clone https://github.com/lululxvi/deepxde.git
 cd deepxde
 python3 -m pip install .
 cd ..
